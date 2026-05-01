@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BrainForge — IQ Test & Game System</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Bebas Neue (display) + Outfit (body) — strong, editorial feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+
+    <!-- ░░░░░░░░░░░░░░░░░░░░░░ NOISE TEXTURE OVERLAY ░░░░░░░░░░░░░░░░░░░░░░ -->
+    <div class="noise"></div>
+
+    <!-- ░░░░░░░░░░░░░░░░░░░░░░ SITE HEADER ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ -->
+    <header class="site-header">
+      <div class="logo">
+        <span class="logo-mark">BF</span>
+        <span class="logo-name">BrainForge</span>
+      </div>
+      <!-- Hidden until user enters name -->
+      <div class="player-chip" id="playerChip" style="display:none">
+        <span class="chip-dot"></span>
+        <span id="chipName">—</span>
+      </div>
+    </header>
+
+    <!-- ░░░░░░░░░░░░░░░░░░░░░░ MAIN APP ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ -->
+    <main class="app-main">
+
+      <!-- ═══════════════════ SCREEN 1 — WELCOME ═══════════════════════════ -->
+      <div id="screenWelcome" class="screen active">
+        <div class="welcome-layout">
+
+          <!-- Left: big headline -->
+          <div class="welcome-left">
+            <p class="eyebrow">Brain Training Platform</p>
+            <h1 class="hero-heading">
+              Test Your<br />
+              <span class="heading-accent">IQ.</span><br />
+              Earn Your<br />
+              <span class="heading-accent">Game.</span>
+            </h1>
+            <p class="hero-body">
+              5 questions · 30 seconds each · 1 unique game
+              assigned just for you based on how you score.
+            </p>
+          </div>
+
+          <!-- Right: entry card -->
+          <div class="welcome-right">
+            <div class="entry-card">
+              <p class="card-label">Step 1 of 2 — Identify yourself</p>
+              <h2 class="card-title">Who are you?</h2>
+
+              <div class="field-wrap">
+                <input
+                  type="text"
+                  id="nameInput"
+                  class="text-input"
+                  placeholder="Your name…"
+                  maxlength="30"
+                  autocomplete="off"
+                />
+                <span class="field-line"></span>
+              </div>
+
+              <div class="stat-row">
+                <div class="stat">
+                  <strong>5</strong>
+                  <small>Questions</small>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                  <strong>30s</strong>
+                  <small>Per question</small>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                  <strong>3</strong>
+                  <small>Games available</small>
+                </div>
+              </div>
+
+              <button class="cta-btn" id="btnBegin" onclick="startQuiz()">
+                Begin Test
+                <svg class="btn-arrow" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ═══════════════════ SCREEN 2 — QUIZ ═════════════════════════════ -->
+      <div id="screenQuiz" class="screen">
+        <div class="quiz-wrap">
+
+          <!-- Top bar: counter + timer -->
+          <div class="quiz-topbar">
+            <span class="q-counter" id="qCounter">1 / 5</span>
+            <div class="timer-box">
+              <div class="timer-track">
+                <div class="timer-bar" id="timerBar"></div>
+              </div>
+              <span class="timer-num" id="timerNum">30</span>
+            </div>
+          </div>
+
+          <!-- Question card -->
+          <div class="q-card">
+            <span class="q-tag" id="qTag">Q1</span>
+            <p class="q-text" id="qText">Loading…</p>
+          </div>
+
+          <!-- Options -->
+          <div class="options-list" id="optionsList">
+            <!-- Injected by script.js -->
+          </div>
+
+          <!-- Next button (enabled after selection) -->
+          <button class="next-btn" id="btnNext" onclick="nextQuestion()" disabled>
+            Next →
+          </button>
+
+        </div>
+      </div>
+
+      <!-- ═══════════════════ SCREEN 3 — RESULT ═══════════════════════════ -->
+      <div id="screenResult" class="screen">
+        <div class="result-wrap">
+
+          <div class="score-display">
+            <div class="score-circle">
+              <svg class="score-svg" viewBox="0 0 100 100">
+                <circle class="score-bg" cx="50" cy="50" r="42"/>
+                <circle class="score-ring" id="scoreRing" cx="50" cy="50" r="42"/>
+              </svg>
+              <div class="score-text">
+                <span id="scoreNum">0</span>
+                <small>/5</small>
+              </div>
+            </div>
+          </div>
+
+          <h2 class="result-heading" id="resultHeading">—</h2>
+          <p class="result-sub" id="resultSub">—</p>
+          <div class="iq-label" id="iqLabel">—</div>
+
+          <button class="cta-btn" onclick="getGame()">
+            Claim My Game →
+          </button>
+
+        </div>
+      </div>
+
+      <!-- ═══════════════════ SCREEN 4 — LOADING ══════════════════════════ -->
+      <div id="screenLoading" class="screen">
+        <div class="loading-wrap">
+          <div class="spinner">
+            <div class="spin-ring"></div>
+            <span class="spin-icon">🧠</span>
+          </div>
+          <h2 class="loading-title">Analysing your score…</h2>
+          <p class="loading-sub">Finding your perfect game from the database</p>
+        </div>
+      </div>
+
+      <!-- ═══════════════════ SCREEN 5 — GAME ARENA ═══════════════════════ -->
+      <div id="screenGame" class="screen">
+        <div class="arena-wrap">
+
+          <!-- Game header -->
+          <div class="arena-header">
+            <div class="arena-meta">
+              <span class="arena-tag" id="arenaTag">memory</span>
+              <h2 class="arena-title" id="arenaTitle">Memory Match</h2>
+              <p class="arena-desc" id="arenaDesc">Match all pairs!</p>
+            </div>
+            <button class="ghost-btn" onclick="goHome()">↩ Restart</button>
+          </div>
+
+          <!-- ─── GAME CONTAINERS — only one visible at a time ─── -->
+
+          <!-- 1. MEMORY GAME -->
+          <div id="gameMemory" class="game-box" style="display:none">
+            <div class="mem-stats">
+              <span>Flips: <b id="memFlips">0</b></span>
+              <span>Pairs: <b id="memPairs">0</b>/8</span>
+              <span>Time: <b id="memTimer">0s</b></span>
+            </div>
+            <div class="mem-grid" id="memGrid">
+              <!-- 16 cards injected by JS -->
+            </div>
+            <button class="small-btn" onclick="initMemory()">🔄 New Game</button>
+          </div>
+
+          <!-- 2. REACTION GAME -->
+          <div id="gameReaction" class="game-box" style="display:none">
+            <div class="rx-pad-wrap">
+              <div class="rx-pad" id="rxPad" onclick="rxClick()">
+                <span id="rxLabel">Click to Start</span>
+              </div>
+            </div>
+            <div class="rx-stats">
+              <div class="rx-stat">
+                <label>Last</label>
+                <strong id="rxLast">—</strong>
+              </div>
+              <div class="rx-stat">
+                <label>Best</label>
+                <strong id="rxBest">—</strong>
+              </div>
+              <div class="rx-stat">
+                <label>Rounds</label>
+                <strong id="rxRounds">0</strong>
+              </div>
+            </div>
+            <button class="small-btn" onclick="rxReset()">🔄 Reset</button>
+          </div>
+
+          <!-- 3. PUZZLE GAME -->
+          <div id="gamePuzzle" class="game-box" style="display:none">
+            <div class="pz-stats">
+              <span>Moves: <b id="pzMoves">0</b></span>
+              <span id="pzStatus">Arrange tiles 1→15. Empty tile = blank.</span>
+            </div>
+            <div class="pz-grid" id="pzGrid">
+              <!-- 16 tiles injected by JS -->
+            </div>
+            <button class="small-btn" onclick="initPuzzle()">🔄 Shuffle</button>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ░░░░░░░░░░░░░░░░░░░░░░ TOAST NOTIFICATION ░░░░░░░░░░░░░░░░░░░░░░░░ -->
+    <div class="toast" id="toast"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
